@@ -1,0 +1,13 @@
+# virtual environment
+venv/
+
+# python cache
+__pycache__/
+*.pyc
+
+# editor folders
+.vscode/
+.idea/
+
+# videos / large files
+*.mp4
