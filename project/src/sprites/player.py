@@ -90,7 +90,7 @@ class Player(pygame.sprite.Sprite):
 
 
  def create_attack_hitbox(self):
-  offset_x = 18 if self.facing == 1 else -18
+  offset_x = 18 if self.facing == 1 else -34
   hitbox_pos = (self.rect.centerx + offset_x, self.rect.centery - 12)
   hitbox_size = (18, 18)
   return hitbox_pos, hitbox_size
