@@ -2,7 +2,8 @@ import sys
 import pygame
 from settings import *
 from level.level import Level
-from level.level_data import LEVEL_0
+from level.level_generator import generate_level
+# from level.level_data import LEVEL_0
 
 class Game:
  def __init__(self):
@@ -11,7 +12,7 @@ class Game:
   pygame.display.set_caption("Code-Based Level")
   self.clock = pygame.time.Clock()
 
-  self.level = Level(LEVEL_0)
+  self.level = Level(generate_level())
 
  def run(self):
   while True:
