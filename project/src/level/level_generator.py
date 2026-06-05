@@ -55,7 +55,7 @@ def generate_level_path():
  player_x, player_y = 2, HEIGHT - 5
  level[player_y][player_x] = "P"
 
- floor_row = HEIGHT - 3
+ floor_row = player_y + 2
  floor_length = 4
  for col in range(player_x, player_x+floor_length):
   level[floor_row][col] = "G"

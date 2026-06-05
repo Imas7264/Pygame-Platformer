@@ -4,7 +4,6 @@ from settings import *
 from level.level import Level
 from level.level_generator import generate_level_random, generate_level_path
 from level.level_data import LEVEL_0
-
 class Game:
  def __init__(self):
   pygame.init()
