@@ -2,9 +2,8 @@ import sys
 import pygame
 from settings import *
 from level.level import Level
-from level.level_generator import generate_level
-# from level.level_data import LEVEL_0
-
+from level.level_generator import generate_level_random, generate_level_path, generate_network_level
+from level.level_data import LEVEL_0
 class Game:
  def __init__(self):
   pygame.init()
@@ -12,7 +11,11 @@ class Game:
   pygame.display.set_caption("Code-Based Level")
   self.clock = pygame.time.Clock()
 
-  self.level = Level(generate_level())
+  # self.level = Level(generate_level_random())
+  # self.level = Level(generate_level_path())
+  self.level = Level(generate_network_level())
+  # self.level = Level(LEVEL_0)  # Static Level
+
 
  def run(self):
   while True:
@@ -30,6 +33,8 @@ class Game:
    self.level.run()
    pygame.display.update()
    self.clock.tick(FPS)
+
+
 
 if __name__ == "__main__":
  game = Game()
