@@ -2,7 +2,7 @@ import sys
 import pygame
 from settings import *
 from level.level import Level
-from level.level_generator import generate_level_random, generate_level_path
+from level.level_generator import generate_level_random, generate_level_path, generate_network_level
 from level.level_data import LEVEL_0
 class Game:
  def __init__(self):
@@ -12,7 +12,8 @@ class Game:
   self.clock = pygame.time.Clock()
 
   # self.level = Level(generate_level_random())
-  self.level = Level(generate_level_path())
+  # self.level = Level(generate_level_path())
+  self.level = Level(generate_network_level())
   # self.level = Level(LEVEL_0)  # Static Level
 
 
