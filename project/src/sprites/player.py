@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
   self.direction = vector(0,0)
   self.speed = 5
   self.gravity = 0.8
-  self.jump_strength = -15
+  self.jump_strength = -12
   self.on_ground = False
 
   #attack

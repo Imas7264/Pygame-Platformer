@@ -114,10 +114,10 @@ def generate_network_level():
 
  #Platform generation
  active_platforms = [
-  [player_x, floor_row, floor_length, 0], #(x, y, length, connected platforms<max=2>)
+  [player_x, floor_row, 3, 0], #(x, y, length, connected platforms<max=2>)
  ]
 
- platform_count = random.randint(5, 12)
+ platform_count = random.randint(8, 12)
  
  i=platform_count
  while i>0:
@@ -133,7 +133,7 @@ def generate_network_level():
    new_y = parent[1] + dy
   
   elif direction == "left":
-   new_x = parent[0] - dx
+   new_x = parent[0] - parent[2] - dx
    new_y = parent[1] + dy
   
   elif direction == "up":
