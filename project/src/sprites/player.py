@@ -1,5 +1,5 @@
 import pygame
-from settings import vector
+from settings import vector, SPEED, JUMP_STRENGTH, GRAVITY
 
 class Player(pygame.sprite.Sprite):
  def __init__(self, pos):
@@ -11,9 +11,9 @@ class Player(pygame.sprite.Sprite):
 
   #physics
   self.direction = vector(0,0)
-  self.speed = 5
-  self.gravity = 0.8
-  self.jump_strength = -12
+  self.speed = SPEED
+  self.gravity = GRAVITY
+  self.jump_strength = JUMP_STRENGTH
   self.on_ground = False
 
   #attack
