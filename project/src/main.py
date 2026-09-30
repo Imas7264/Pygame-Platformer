@@ -4,6 +4,8 @@ from settings import *
 from level.level import Level
 from level.level_generator import generate_level_random, generate_level_path, generate_level_network, generate_level_arena, generate_level_full
 from level.level_data import LEVEL_0
+
+from level.container_generator import populate_container
 class Game:
  def __init__(self):
   pygame.init()
@@ -15,7 +17,10 @@ class Game:
   # self.level = Level(generate_level_path())
   # self.level = Level(generate_level_network())
   # self.level = Level(generate_level_arena())
-  self.level = Level(generate_level_full())
+  # self.level = Level(generate_level_full())
+  
+  self.level = Level(populate_container())
+
   # self.level = Level(LEVEL_0)  # Static Level
 
 

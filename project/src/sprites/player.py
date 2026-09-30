@@ -65,6 +65,7 @@ class Player(pygame.sprite.Sprite):
 
  def move_x(self):
   self.rect.x += self.direction.x * self.speed
+  # print(f"Player is at ({self.rect.x}, {self.rect.y})")
  
  
  def apply_gravity(self):

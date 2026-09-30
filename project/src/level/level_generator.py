@@ -261,7 +261,7 @@ def generate_level_full(seed=None):
 
  # ── band / zone pass ─────────────────────────────────────────────────
  BAND_H       = 4    # rows per horizontal band
- ZONE_W       = 6    # cols per vertical zone
+ ZONE_W       = 8    # cols per vertical zone
  MIN_LEN      = 2    # shortest platform in tiles
  MAX_LEN      = 4    # longest platform in tiles
  MAX_ATTEMPTS = 500   # retries per cell before giving up
