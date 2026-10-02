@@ -7,6 +7,7 @@ class Player(pygame.sprite.Sprite):
   
   self.image = pygame.Surface((18, 24))
   self.image.fill("dodgerblue")
+  self.originalPos = pos
   self.rect = self.image.get_rect(topleft=pos)
 
   #physics
@@ -24,6 +25,10 @@ class Player(pygame.sprite.Sprite):
 
  def get_input(self):
   keys = pygame.key.get_pressed()
+
+  if keys[pygame.K_p]:
+   self.rect.x = self.originalPos[0]
+   self.rect.y = self.originalPos[1]
 
   #moving right
   if keys[pygame.K_RIGHT] or keys[pygame.K_d]:

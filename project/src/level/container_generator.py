@@ -27,7 +27,17 @@ def store_platform(x, y, length, connected):
 
 def valid_platform(x, y, length, platforms)  -> bool:
  for platform in platforms:
-  if ((x>=platform["bound_x"][0] or x+length-1>=platform["bound_x"][0]) and x<=platform["bound_x"][1]) and (y<=platform["bound_y"][0] and y>=platform["bound_y"][1]):
+  if (
+      (
+       x+length-1>=platform["bound_x"][0] and
+       x<=platform["bound_x"][1]
+      ) 
+       and 
+      (
+       y<=platform["bound_y"][0] and
+       y>=platform["bound_y"][1]
+      )
+     ):
    return False
 
  return True
@@ -74,7 +84,7 @@ def populate_container():
   else:
    new_x = parent["plat_x"] + dx + parent["length"]
 
-  new_y = parent["plat_y"] + dy  
+  new_y = parent["plat_y"] + dy
 
   if new_x < 2 or new_x+platform_length > WIDTH-2:
    continue

@@ -6,6 +6,7 @@ from level.level_generator import generate_level_random, generate_level_path, ge
 from level.level_data import LEVEL_0
 
 from level.container_generator import populate_container
+
 class Game:
  def __init__(self):
   pygame.init()
