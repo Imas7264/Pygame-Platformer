@@ -6,15 +6,11 @@ TILE_SIZE = 30
 FPS = 40
 # ANIMATION_SPEED = 6
 
-#player
+# player
 SPEED = 5
 JUMP_STRENGTH = -12
 GRAVITY = 0.8
 
 
-#layers
-Z_LAYERS = {
- "bg": 0,
- "terrain": 1,
- "player": 2
-}
+# layers
+Z_LAYERS = {"bg": 0, "terrain": 1, "player": 2}
