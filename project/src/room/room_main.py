@@ -94,8 +94,9 @@ while running:
 
     # final hallway
     if state == 6:
-        for hallway in hallways:
-            pygame.draw.line(screen, (220, 220, 220), hallway[0], hallway[1], 4)
+        for hw_rect in hallways:
+            pygame.draw.rect(screen, (90, 100, 110), hw_rect)
+            pygame.draw.rect(screen, (220, 220, 220), hw_rect, 1)
 
     # draw the rooms
     for room in rooms:
