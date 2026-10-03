@@ -35,8 +35,7 @@ def store_platform(x, y, length, connected):
 def valid_platform(x, y, length, platforms) -> bool:
     for platform in platforms:
         if (
-            (x >= platform["bound_x"][0] or x + length - 1 >= platform["bound_x"][0])
-            and x <= platform["bound_x"][1]
+            x + length - 1 >= platform["bound_x"][0] and x <= platform["bound_x"][1]
         ) and (y <= platform["bound_y"][0] and y >= platform["bound_y"][1]):
             return False
 
