@@ -1,6 +1,6 @@
 import pygame
-from settings import TILE_SIZE
-from sprites.tile import Tile
+from settings import TILE_SIZE, Z_LAYERS
+from sprites.tile import Tile, CollisionTile, BackgroundTile
 from sprites.player import Player
 from sprites.enemy import Enemy
 from sprites.attack import AttackHitbox
@@ -9,7 +9,11 @@ from sprites.attack import AttackHitbox
 class Level:
     def __init__(self, layout):
         self.display_surface = pygame.display.get_surface()
-        self.tiles = pygame.sprite.Group()
+
+        self.collision_sprites = pygame.sprite.Group()
+        self.terrain_sprites = pygame.sprite.LayeredUpdates()
+        self.background_sprites = pygame.sprite.LayeredUpdates()
+
         self.enemies = pygame.sprite.Group()
         self.player = None
         self.attack_sprites = pygame.sprite.Group()
@@ -23,7 +27,10 @@ class Level:
                 y = row_index * TILE_SIZE
 
                 if cell == "#":
-                    self.tiles.add(Tile((x, y), cell))
+                    self.collision_sprites.add(CollisionTile((x, y)))
+                    self.terrain_sprites.add(
+                        Tile((x, y), cell), layer=Z_LAYERS["terrain"]
+                    )
 
                 elif cell == "P":
                     self.player = Player((x, y))
@@ -32,10 +39,19 @@ class Level:
                     self.enemies.add(Enemy((x, y)))
 
                 elif cell == "G":
-                    self.tiles.add(Tile((x, y), cell))
+                    self.collision_sprites.add(CollisionTile((x, y)))
+                    self.terrain_sprites.add(
+                        Tile((x, y), cell), layer=Z_LAYERS["terrain"]
+                    )
+
+                elif cell == "M":
+                    self.background_sprites.add(
+                        BackgroundTile((x, y), "gray"), layer=Z_LAYERS["bg"]
+                    )
 
     def run(self):
-        self.tiles.draw(self.display_surface)
+        self.background_sprites.draw(self.display_surface)
+        self.terrain_sprites.draw(self.display_surface)
 
         # player
         if self.player:
@@ -84,7 +100,7 @@ class Level:
     def vertical_collision(self):
         player = self.player
 
-        for tile in self.tiles:
+        for tile in self.collision_sprites:
             if tile.rect.colliderect(player.rect):
 
                 # landing
@@ -101,7 +117,7 @@ class Level:
     def horizontal_collision(self):
         player = self.player
 
-        for tile in self.tiles:
+        for tile in self.collision_sprites:
             if tile.rect.colliderect(player.rect):
 
                 # moving right
@@ -113,7 +129,7 @@ class Level:
                     player.rect.left = tile.rect.right
 
     def enemy_horizontal_collision(self, enemy):
-        for tile in self.tiles:
+        for tile in self.collision_sprites:
             if tile.rect.colliderect(enemy.rect):
                 # wall on right
                 if enemy.direction.x > 0:
@@ -126,7 +142,7 @@ class Level:
                     enemy.direction.x *= -1
 
     def enemy_vertical_collision(self, enemy):
-        for tile in self.tiles:
+        for tile in self.collision_sprites:
             if tile.rect.colliderect(enemy.rect):
                 # landing
                 if enemy.direction.y > 0:
@@ -137,7 +153,7 @@ class Level:
     def enemy_has_ground_ahead(self, enemy):
         check_x, check_y = enemy.get_ahead_position()
 
-        for tile in self.tiles:
+        for tile in self.collision_sprites:
             if tile.rect.collidepoint(check_x, check_y):
                 return True
 
