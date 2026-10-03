@@ -16,6 +16,9 @@ def create_platform(x, y, length, level):
     for i in range(length):
         level[y][x + i] = "G"
 
+    level[y - 1][x] = "M"
+    level[y - 1][x + length - 1] = "M"
+
     return level
 
 

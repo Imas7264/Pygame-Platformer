@@ -13,4 +13,4 @@ GRAVITY = 0.8
 
 
 # layers
-Z_LAYERS = {"bg": 0, "terrain": 1, "player": 2}
+Z_LAYERS = {"bg": 0, "collision": 1, "terrain": 2, "player": 3, "enemy": 4, "attack": 5}
