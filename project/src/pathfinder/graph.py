@@ -7,7 +7,7 @@ class LevelGraph:
 
     def create_node(self, pos):
         node = self.graph.add_vertex(pos=pos)
-        return node.index
+        return node
 
     def create_edge(self, source, destination, bidirectional=True):
         self.graph.add_edge(source, destination)
@@ -17,6 +17,23 @@ class LevelGraph:
 
     def get_nodes(self):
         return self.graph.vs
+
+    def get_edges(self):
+        return self.graph.es
+
+    def node_exists(self, pos):
+        return pos in self.graph.vs["pos"]
+
+    def get_node_by_id(self, node_id):
+        return self.graph.vs[node_id]
+
+    def get_node_by_pos(self, pos):
+
+        for node in self.graph.vs:
+            if node["pos"] == pos:
+                return node
+
+        return None
 
 
 # graph = LevelGraph()

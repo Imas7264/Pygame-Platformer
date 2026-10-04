@@ -1,3 +1,4 @@
+import pygame
 import random
 from pathfinder.graph import LevelGraph
 from settings import (
@@ -11,6 +12,9 @@ from settings import (
 
 WIDTH = WINDOW_WIDTH // TILE_SIZE
 HEIGHT = WINDOW_HEIGHT // TILE_SIZE
+BOUND_X = 1
+BOUND_Y_UPPER = 2
+BOUND_Y_LOWER = 1
 
 
 def create_platform(x, y, length, level):
@@ -21,16 +25,20 @@ def create_platform(x, y, length, level):
 
 
 def store_platform(x, y, length, connected, graph):
-    n1 = graph.create_node((x, y - 1))
-    n2 = graph.create_node((x + length - 1, y - 1))
+    n1 = graph.create_node((x, y - 1)).index
+
+    if length == 1:
+        n2 = n1
+    else:
+        n2 = graph.create_node((x + length - 1, y - 1)).index
 
     platform = {
-        "plat_x": x,
-        "plat_y": y,
+        "x": x,
+        "y": y,
         "length": length,
         "connected": connected,  # No. of plaforms reachable from this platform <max=2>
-        "bound_x": (x - 1, x + length),  # Boundary for x coordinate
-        "bound_y": (y + 2, y - 3),  # Boundary for y coordinate
+        "bound_x": (x - BOUND_X, x + length),  # Boundary for x coordinate
+        "bound_y": (y + BOUND_Y_LOWER, y - BOUND_Y_UPPER),  # Boundary for y coordinate
         "left_node": n1,
         "right_node": n2,
     }
@@ -41,11 +49,63 @@ def store_platform(x, y, length, connected, graph):
 def valid_platform(x, y, length, platforms) -> bool:
     for platform in platforms:
         if (
-            x + length - 1 >= platform["bound_x"][0] and x <= platform["bound_x"][1]
-        ) and (y <= platform["bound_y"][0] and y >= platform["bound_y"][1]):
+            (x + length - 1 >= platform["bound_x"][0] and x <= platform["bound_x"][1])
+            and (y <= platform["bound_y"][0] and y >= platform["bound_y"][1])
+        ) or (
+            (
+                platform["x"] + platform["length"] - 1 >= x - BOUND_X
+                and platform["x"] <= x + length
+            )
+            and (
+                platform["y"] <= y + BOUND_Y_LOWER
+                and platform["y"] >= y - BOUND_Y_UPPER
+            )
+        ):
             return False
 
     return True
+
+
+def create_landing_nodes_and_edges(platforms, graph, level):
+    for platform in platforms:
+        node = graph.get_node_by_id(platform["left_node"])
+        x = node["pos"][0] - 1
+
+        for y in range(node["pos"][1] + 1, HEIGHT):
+            if level[y][x] == "G":
+                if not graph.node_exists((x, y - 1)):
+                    landing_node = graph.create_node((x, y - 1))
+                else:
+                    landing_node = graph.get_node_by_pos((x, y - 1))
+
+                bidirectional = abs(y - node["pos"][1]) <= 4
+                graph.create_edge(node.index, landing_node.index, bidirectional)
+                break
+
+        node = graph.get_node_by_id(platform["right_node"])
+        x = node["pos"][0] + 1
+
+        for y in range(node["pos"][1] + 1, HEIGHT):
+            if level[y][x] == "G":
+                if not graph.node_exists((x, y - 1)):
+                    landing_node = graph.create_node((x, y - 1))
+                else:
+                    landing_node = graph.get_node_by_pos((x, y - 1))
+
+                bidirectional = abs(y - node["pos"][1]) <= 4
+                graph.create_edge(node.index, landing_node.index, bidirectional)
+                break
+
+
+def create_platform_edges(platforms, graph):
+    for platform in platforms:
+        node_index = platform["left_node"]
+        y = platform["y"] - 1
+        for x in range(platform["x"] + 1, platform["x"] + platform["length"]):
+            if graph.node_exists((x, y)):
+                temp = graph.get_node_by_pos((x, y))
+                graph.create_edge(node_index, temp.index)
+                node = temp
 
 
 def populate_container():
@@ -90,11 +150,11 @@ def populate_container():
         parent = random.choice(active_platforms)
 
         if dx < 0:
-            new_x = parent["plat_x"] + dx - platform_length
+            new_x = parent["x"] + dx - platform_length
         else:
-            new_x = parent["plat_x"] + dx + parent["length"]
+            new_x = parent["x"] + dx + parent["length"]
 
-        new_y = parent["plat_y"] + dy
+        new_y = parent["y"] + dy
 
         if new_x < 2 or new_x + platform_length > WIDTH - 2:
             continue
@@ -116,12 +176,19 @@ def populate_container():
         else:
             continue
 
+    create_landing_nodes_and_edges(platforms, graph, level)
+    create_platform_edges(platforms, graph)
     level = mark_nodes(graph, level)
+
     print("Total platforms: ", platform_count)
     print("Total attempts: ", attempts)
+
+    print("Total nodes: ", graph.graph.vcount())
+    print("Total edges: ", graph.graph.ecount())
+
     level = ["".join(row) for row in level]
 
-    return level
+    return level, graph
 
 
 def mark_nodes(graph, level):
@@ -131,3 +198,21 @@ def mark_nodes(graph, level):
         level[pos[1]][pos[0]] = "M"
 
     return level
+
+
+def draw_edges(screen, graph):
+    for edge in graph.get_edges():
+        source = graph.get_node_by_id(edge.source)
+        destination = graph.get_node_by_id(edge.target)
+
+        source_pos = (
+            source["pos"][0] * TILE_SIZE + TILE_SIZE // 2,
+            source["pos"][1] * TILE_SIZE + TILE_SIZE // 2,
+        )
+
+        destination_pos = (
+            destination["pos"][0] * TILE_SIZE + TILE_SIZE // 2,
+            destination["pos"][1] * TILE_SIZE + TILE_SIZE // 2,
+        )
+
+        pygame.draw.line(screen, (255, 0, 0), source_pos, destination_pos, 2)

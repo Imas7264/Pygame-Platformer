@@ -11,7 +11,7 @@ from level.level_generator import (
 )
 from level.level_data import LEVEL_0
 
-from level.container_generator import populate_container
+from level.container_generator import populate_container, draw_edges
 
 
 class Game:
@@ -27,7 +27,9 @@ class Game:
         # self.level = Level(generate_level_arena())
         # self.level = Level(generate_level_full())
 
-        self.level = Level(populate_container())
+        layout, graph = populate_container()
+        self.level = Level(layout)
+        self.graph = graph
 
         # self.level = Level(LEVEL_0)  # Static Level
 
@@ -45,6 +47,7 @@ class Game:
 
             self.screen.fill("black")
             self.level.run()
+            draw_edges(self.screen, self.graph)
             pygame.display.update()
             self.clock.tick(FPS)
 
