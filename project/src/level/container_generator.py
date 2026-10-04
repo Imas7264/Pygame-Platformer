@@ -1,4 +1,5 @@
 import random
+from pathfinder.graph import LevelGraph
 from settings import (
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
@@ -16,13 +17,13 @@ def create_platform(x, y, length, level):
     for i in range(length):
         level[y][x + i] = "G"
 
-    level[y - 1][x] = "M"
-    level[y - 1][x + length - 1] = "M"
-
     return level
 
 
-def store_platform(x, y, length, connected):
+def store_platform(x, y, length, connected, graph):
+    n1 = graph.create_node((x, y - 1))
+    n2 = graph.create_node((x + length - 1, y - 1))
+
     platform = {
         "plat_x": x,
         "plat_y": y,
@@ -30,6 +31,8 @@ def store_platform(x, y, length, connected):
         "connected": connected,  # No. of plaforms reachable from this platform <max=2>
         "bound_x": (x - 1, x + length),  # Boundary for x coordinate
         "bound_y": (y + 2, y - 3),  # Boundary for y coordinate
+        "left_node": n1,
+        "right_node": n2,
     }
 
     return platform
@@ -47,6 +50,7 @@ def valid_platform(x, y, length, platforms) -> bool:
 
 def populate_container():
     level = []
+    graph = LevelGraph()
 
     # Boundary generation
     for row in range(HEIGHT):
@@ -65,7 +69,7 @@ def populate_container():
     level = create_platform(player_x, floor_row, floor_length, level)
 
     # Platform generation
-    platform = store_platform(player_x, floor_row, floor_length, 0)
+    platform = store_platform(player_x, floor_row, floor_length, 0, graph)
     platforms = [
         platform,
     ]
@@ -101,7 +105,7 @@ def populate_container():
         if valid_platform(new_x, new_y, platform_length, platforms):
             level = create_platform(new_x, new_y, platform_length, level)
 
-            platform = store_platform(new_x, new_y, platform_length, 0)
+            platform = store_platform(new_x, new_y, platform_length, 0, graph)
             platforms.append(platform)
 
             active_platforms.append(platform)
@@ -112,8 +116,18 @@ def populate_container():
         else:
             continue
 
+    level = mark_nodes(graph, level)
     print("Total platforms: ", platform_count)
     print("Total attempts: ", attempts)
     level = ["".join(row) for row in level]
+
+    return level
+
+
+def mark_nodes(graph, level):
+    for node in graph.get_nodes():
+        pos = node["pos"]
+        level[pos[1]][pos[0]] = "M"
+        level[pos[1]][pos[0]] = "M"
 
     return level
