@@ -9,7 +9,7 @@ from level.level_generator import (
     generate_level_arena,
     generate_level_full,
 )
-from level.level_data import LEVEL_0
+from level.level_data import LEVEL_0, LEVEL_1
 
 from level.container_generator import populate_container, draw_edges
 
@@ -18,7 +18,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-        pygame.display.set_caption("Code-Based Level")
+        pygame.display.set_caption("Testing Environment")
         self.clock = pygame.time.Clock()
 
         # self.level = Level(generate_level_random())
@@ -27,11 +27,13 @@ class Game:
         # self.level = Level(generate_level_arena())
         # self.level = Level(generate_level_full())
 
-        layout, graph = populate_container()
-        self.level = Level(layout)
-        self.graph = graph
+        # layout, graph = populate_container()
+        # self.level = Level(layout)
+        # self.graph = graph
 
-        # self.level = Level(LEVEL_0)  # Static Level
+        # Static Levels
+        # self.level = Level(LEVEL_0)
+        self.level = Level(LEVEL_1)
 
     def run(self):
         while True:
@@ -47,7 +49,11 @@ class Game:
 
             self.screen.fill("black")
             self.level.run()
-            draw_edges(self.screen, self.graph)
+
+            # Debugging and testing stuff
+            # draw_edges(self.screen, self.graph)
+            self.level.player.draw_trajectory(self.screen)
+
             pygame.display.update()
             self.clock.tick(FPS)
 

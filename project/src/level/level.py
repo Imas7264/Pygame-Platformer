@@ -65,6 +65,13 @@ class Level:
             self.player.apply_gravity()
             self.vertical_collision()
 
+            # trajectory
+            if self.player.record_trajectory:
+                self.player.trajectory.append(self.player.rect.center)
+
+                if self.player.on_ground:
+                    self.player.record_trajectory = False
+
             self.player.update_attack()
             self.handle_player_attack()
             self.display_surface.blit(self.player.image, self.player.rect)

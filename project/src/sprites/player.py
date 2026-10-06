@@ -6,10 +6,17 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
 
+        # visual settings
         self.image = pygame.Surface((18, 24))
         self.image.fill("dodgerblue")
-        self.originalPos = pos
         self.rect = self.image.get_rect(topleft=pos)
+
+        # for resetting player
+        self.originalPos = pos
+
+        # for tracking player trajectory
+        self.trajectory = []
+        self.record_trajectory = False  # set to True when the player jumps
 
         # physics
         self.direction = vector(0, 0)
@@ -27,6 +34,11 @@ class Player(pygame.sprite.Sprite):
     def get_input(self):
         keys = pygame.key.get_pressed()
 
+        # clearing jump trajectory
+        if keys[pygame.K_c]:
+            self.trajectory.clear()
+
+        # resetting player position
         if keys[pygame.K_p]:
             self.rect.x = self.originalPos[0]
             self.rect.y = self.originalPos[1]
@@ -52,6 +64,9 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = self.jump_strength
             # self.rect.y += self.direction.y
             self.on_ground = False
+            # trajectory tracking
+            # self.trajectory.clear()  # erasing previous jump trajectory
+            self.record_trajectory = True
 
         # attacking
         if keys[pygame.K_f]:
@@ -97,3 +112,7 @@ class Player(pygame.sprite.Sprite):
         hitbox_pos = (self.rect.centerx + offset_x, self.rect.centery - 12)
         hitbox_size = (18, 18)
         return hitbox_pos, hitbox_size
+
+    def draw_trajectory(self, screen):
+        for pos in self.trajectory:
+            pygame.draw.circle(screen, (255, 255, 0), pos, 1)
