@@ -27,13 +27,13 @@ class Game:
         # self.level = Level(generate_level_arena())
         # self.level = Level(generate_level_full())
 
-        # layout, graph = populate_container()
-        # self.level = Level(layout)
-        # self.graph = graph
+        layout, graph = populate_container()
+        self.level = Level(layout)
+        self.graph = graph
 
         # Static Levels
         # self.level = Level(LEVEL_0)
-        self.level = Level(LEVEL_1)
+        # self.level = Level(LEVEL_1)
 
     def run(self):
         while True:
@@ -43,19 +43,24 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-                # if event.type == pygame.KEYDOWN:
-                #  if event.key == pygame.K_SPACE:
-                #   game.level.player.jump()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_n:
+                        self.regenerate_level()
 
             self.screen.fill("black")
             self.level.run()
 
             # Debugging and testing stuff
-            # draw_edges(self.screen, self.graph)
+            draw_edges(self.screen, self.graph)
             self.level.player.draw_trajectory(self.screen)
 
             pygame.display.update()
             self.clock.tick(FPS)
+
+    def regenerate_level(self):
+        layout, graph = populate_container()
+        self.level = Level(layout)
+        self.graph = graph
 
 
 if __name__ == "__main__":
