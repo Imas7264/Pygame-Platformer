@@ -8,17 +8,19 @@ from room_filtering import filter_main_rooms
 from room_generation import generate_rooms
 from room_separation import update_separation
 
+n = int(input("room number: "))
+NUM_ROOMS = n
+CIRCLE_RADIUS = 200
+MIN_SIZE, MAX_SIZE = 40, 90
+MIN_WIDTH_THRESH, MIN_HEIGHT_THRESH = 60, 60
+
 pygame.init()
 WIDTH, HEIGHT = 800, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+CIRCLE_CENTER = (WIDTH // 2, HEIGHT // 2)
 pygame.display.set_caption("Procedural Dungeon Generator - Integrated Pipeline")
 clock = pygame.time.Clock()
 
-NUM_ROOMS = 60
-CIRCLE_CENTER = (WIDTH // 2, HEIGHT // 2)
-CIRCLE_RADIUS = 300
-MIN_SIZE, MAX_SIZE = 40, 90
-MIN_WIDTH_THRESH, MIN_HEIGHT_THRESH = 60, 60
 
 # States:
 # 1: Generate Rooms
